@@ -2,61 +2,33 @@ import React, { useState, useEffect } from "react";
 import SearchInput from "./SearchInput";
 import FilterCountry from "./FilterCountry";
 import { Link } from "react-router-dom";
-
-const url = "https://restcountries.com/v3.1/";
+import api from "../utils/api";
 
 const Countries = () => {
   const [countries, setCountries] = useState([]);
+
   useEffect(() => {
-    const fetchCountriesData = async () => {
+    async function fetchData() {
       try {
-        const response = await fetch(`${url}/all`);
-        if (!response.ok) {
-          throw new Error("Failed to fetch the countries data");
-        }
-        const data = await response.json();
+        const data = await api.getAllCountries();
         setCountries(data);
       } catch (error) {
-        console.error("Error occured while fetching data", error);
+        console.error("Error fetching countries:", error);
       }
-    };
-    fetchCountriesData();
+    }
+
+    fetchData();
   }, []);
 
-  const getCountryByName = async (countryName) => {
-    try {
-      const res = await fetch(`${url}/name/${countryName}`);
-
-      if (!res.ok) throw new Error("No country found");
-
-      const data = await res.json();
-      setCountries(data);
-    } catch (error) {
-      console.error("Error occured while fetching data", error);
-    }
-  };
-
-  const getCountryByRegion = async (regionName) => {
-    try {
-      const res = await fetch(`${url}/region/${regionName}`);
-
-      if (!res.ok) throw new Error("Request failed...");
-
-      const data = await res.json();
-      setCountries(data);
-    } catch (error) {
-      console.error("Error occured while fetching data", error);
-    }
-  };
   return (
     <div className="all__country__wrapper">
       <div className="country__top">
         <div className="search">
-          <SearchInput onSearch={getCountryByName} />
+          <SearchInput onSearch={api.getCountryByName} />
         </div>
 
         <div className="filter">
-          <FilterCountry onSelect={getCountryByRegion} />
+          <FilterCountry onSelect={api.getCountryByRegion} />
         </div>
       </div>
 
