@@ -4,13 +4,14 @@ import FilterCountry from "./FilterCountry";
 import { Link } from "react-router-dom";
 import api from "../utils/api";
 
+const { getAllCountries, getCountryByName, getCountryByRegion } = api;
 const Countries = () => {
   const [countries, setCountries] = useState([]);
 
   useEffect(() => {
     async function fetchData() {
       try {
-        const data = await api.getAllCountries();
+        const data = await getAllCountries();
         setCountries(data);
       } catch (error) {
         console.error("Error fetching countries:", error);
@@ -24,11 +25,11 @@ const Countries = () => {
     <div className="all__country__wrapper">
       <div className="country__top">
         <div className="search">
-          <SearchInput onSearch={api.getCountryByName} />
+          <SearchInput onSearch={getCountryByName} />
         </div>
 
         <div className="filter">
-          <FilterCountry onSelect={api.getCountryByRegion} />
+          <FilterCountry onSelect={getCountryByRegion} />
         </div>
       </div>
 
